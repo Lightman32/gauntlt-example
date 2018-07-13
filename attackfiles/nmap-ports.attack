@@ -1,0 +1,26 @@
+@slow
+Feature: simple nmap attack (sanity check)
+
+  Background:
+    Given "nmap" is installed
+    And the following environment variables:
+      | name     | environment_variable_name      |
+      | hostname | TEST_HOSTNAME |
+
+  Scenario: Verify server is available on standard web ports
+    When I launch an "nmap" attack with:
+      """
+      nmap -p 80,443,22,3000,11211,6379,3306 -oX report.xml <hostname>
+      """
+    And the file "report.xml" should contain XML:
+      | css                                                          |
+      | ports port[protocol="tcp"][portid="443"] state[state="open"]  |
+    And the file "report.xml" should not contain XML:
+      | css                                                          |
+      | ports port[protocol="tcp"][portid="80"] state[state="open"]  |
+      | ports port[protocol="tcp"][portid="3000"] state[state="open"] |
+      | ports port[protocol="tcp"][portid="22"] state[state="open"] |
+      | ports port[protocol="tcp"][portid="11211"] state[state="open"] |
+      | ports port[protocol="tcp"][portid="6379"] state[state="open"] |
+      | ports port[protocol="tcp"][portid="3306"] state[state="open"] |
+

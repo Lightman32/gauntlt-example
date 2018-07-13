@@ -1,0 +1,15 @@
+@slow
+Feature: Ensures target is not vulnerable to heartbleed
+
+Background:
+  Given "sslyze" is installed
+  And the following environment variables:
+    | name     | environment_variable_name      |
+    | hostname | TEST_HOSTNAME |
+
+Scenario: Ensures target is not vulnerable to heartbleed
+  When I launch an "sslyze" attack with:
+    """
+    python <sslyze_path> --heartbleed <hostname>:443
+    """
+  Then the output should contain "Not vulnerable to Heartbleed"

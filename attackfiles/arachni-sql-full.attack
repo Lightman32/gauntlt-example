@@ -1,0 +1,15 @@
+@reallyslow
+Feature: Look for a range of sqli vulnerbilities 
+
+Scenario: Using the arachni, look for a range of sqli vulnerbilities 
+  Given "arachni" is installed
+  And the following profile:
+     | name                | value                          |
+     | url                 | TEST_URL        	|
+     | depth               | 3   							|
+     | timeout			   | 00:09:00 	|
+   When I launch an "arachni" attack with:
+  """
+  arachni --checks=sql* --scope-directory-depth-limit=<depth> --timeout <timeout> <url>
+  """
+  Then the output should contain "0 issues were detected."

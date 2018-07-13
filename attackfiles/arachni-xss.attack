@@ -1,0 +1,15 @@
+@reallyslow
+Feature: Look for a range of xss vulnerbilities
+
+Scenario: Using the arachni, look for a range of xss vulnerbilities
+  Given "arachni" is installed
+  And the following profile:
+     | name                | value                          |
+     | url                 | TEST_URL        	|
+     | depth               | 3   							|
+     | timeout			   | 00:01:00 	|
+  When I launch an "arachni" attack with:
+  """
+  arachni --checks=xss* --platforms=linux,php --scope-directory-depth-limit=1 --scope-page-limit=10 --scope-auto-redundant=2 --timeout <timeout> <url>
+  """
+  Then the output should contain "0 issues were detected."
